@@ -1,13 +1,11 @@
 import filecmp
 import os.path
 import shutil
+import sys
 import time
 
 
-def sync_folder():
-    directories = 'C://Python/.git/PycharmProjects/'
-    source_directory = f'{directories}source'
-    replica_directory = f'{directories}replica'
+def sync_folder(source_directory, replica_directory):
     comparison = filecmp.dircmp(source_directory, replica_directory)
     new_paths = full_paths_of(comparison.left_only, source_directory)
     for item_path in new_paths:
@@ -37,10 +35,11 @@ def full_paths_of(file_names, directory):
     return [f'{directory}/{file_name}' for file_name in file_names]
 
 
-def periodically_sync_folder():
+def periodically_sync_folder(source_directory, replica_directory):
     while True:
-        sync_folder()
+        sync_folder(source_directory, replica_directory)
         time.sleep(3)
 
 
-periodically_sync_folder()
+if __name__ == '__main__':
+    periodically_sync_folder(sys.argv[1], sys.argv[2])
